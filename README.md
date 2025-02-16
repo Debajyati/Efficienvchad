@@ -4,20 +4,24 @@
 
 Efficienvchad Is the NVCHADification of Efficienvim. Basically Efficienvim is a neovim configuration that aims to be as minimal as possible, being highly customizable. While Efficienvchad is just Efficienvim partially integrated with nvchad-ui, to increase the aesthetics.
 
-## Installation
+## Installation && Usage
+Create a new user repository from this template.
+Press the "Use this template" button above to create a new repository to store your user configuration.
 
-Simply clone this repo into your `$HOME/.config/nvim` directory. (If you are using linux/MacOS)
+You can also just clone this repository directly if you do not want to track your user configuration in GitHub.
+
+Simply clone your repo into your `$HOME/.config/nvim` directory. (If you are using linux/MacOS)
 ```bash
-git clone https://github.com/Debajyati/Efficienvchad.git ~/.config/nvim
+git clone https://github.com/<your-username>/Efficienvchad.git ~/.config/nvim
 ```
 If you are using windows, you have to clone this repo into your `%LOCALAPPDATA%\nvim` directory.
 For cmd.exe users:
 ```batch
-git clone https://github.com/Debajyati/Efficienvchad.git %LOCALAPPDATA%\nvim
+git clone https://github.com/<your-username>/Efficienvchad.git %LOCALAPPDATA%\nvim
 ```
 For PowerShell users:
 ```pwsh
-git clone https://github.com/Debajyati/Efficienvchad.git $env:LOCALAPPDATA\nvim
+git clone https://github.com/<your-username>/Efficienvchad.git $env:LOCALAPPDATA\nvim
 ```
 
 ## TREE STRUCTURE OF THE REPO
