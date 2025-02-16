@@ -1,10 +1,5 @@
 local specs = {
   {
-    -- using lazy to install lazy
-    "folke/lazy.nvim",
-    lazy = false,
-  },
-  {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.6',
     -- or                              , branch = '0.1.x',
