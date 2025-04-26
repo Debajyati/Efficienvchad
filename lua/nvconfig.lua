@@ -10,7 +10,8 @@ local options = {
     theme =  colorscheme, -- default theme
     hl_add = {},
     hl_override = {
-      Visual = vim.api.nvim_get_hl(0, { name = "PmenuSel" })
+      -- Visual = vim.api.nvim_get_hl(0, { name = "PmenuSel" })
+      Visual = { link = 'pmenusel' },
     },
     integrations = {},
     changed_themes = {},
