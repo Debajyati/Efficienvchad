@@ -7,8 +7,7 @@ local specs = {
   },
   { "nvchad/volt" },
   {
-    "Debajyati/base46",
-    branch = "fix",
+    "nvchad/base46",
     lazy = true,
     build = function()
       require("base46").load_all_highlights()
