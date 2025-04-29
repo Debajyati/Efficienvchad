@@ -55,7 +55,7 @@ git clone https://github.com/<your-username>/Efficienvchad.git $env:LOCALAPPDATA
 │   │   ├──  telescope.lua
 │   │   └──  terminal.lua
 │   ├──  extras
-│   │   ├──  firenvim.lua // deprecated plugin, currently config code commented out. So that no clash happens. You may delete the file. Will by removed from extras soon.
+│   │   ├──  firenvim.lua // deprecated plugin, currently config code commented out, so that no clash happens. You may delete the file
 │   │   └──  supermaven.lua
 │   ├──  plugins
 │   │   ├──  base.lua
