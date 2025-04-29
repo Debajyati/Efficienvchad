@@ -12,8 +12,3 @@ vim.api.nvim_create_autocmd("UiEnter", {
     end
   end,
 })
-
-vim.api.nvim_create_augroup("ColorTheme", {})
-vim.api.nvim_create_autocmd("ColorScheme", {
-  desc = "make ColorScheme change permanent"
-})
