@@ -4,7 +4,7 @@ Requirements: Neovim 0.11 or above
 
 ## Description
 
-Efficienvchad Is the NVCHADification of Efficienvim. Basically Efficienvim is a neovim configuration that aims to be as minimal as possible, being highly customizable. While Efficienvchad is just Efficienvim partially integrated with nvchad-ui, to increase the aesthetics.
+Efficienvchad Is the NVCHADification of [Efficienvim](https://github.com/Debajyati/Efficienvim). Basically Efficienvim is a neovim configuration that aims to be as minimal as possible, being highly customizable. While Efficienvchad is just Efficienvim partially integrated with nvchad-ui, to increase the aesthetics.
 
 Uses the lazy.nvim package manager and neovim's native lsp api instead of the old 'nvim-lspconfig' configurations for managing language servers.
 
@@ -83,4 +83,5 @@ git clone https://github.com/<your-username>/Efficienvchad.git $env:LOCALAPPDATA
 ## License
 
 MIT
+
 
