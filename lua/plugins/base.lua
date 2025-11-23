@@ -1,8 +1,9 @@
+---@diagnostic disable: missing-fields
+
 local specs = {
   {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.6',
-    -- or                              , branch = '0.1.x',
+    branch = '0.1.x',
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {
       set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
@@ -21,6 +22,13 @@ local specs = {
     dependencies = {
       { "folke/neodev.nvim", opts = {} },
       {
+        "nvimdev/lspsaga.nvim",
+        event = "VeryLazy",
+        config = function()
+          require('lspsaga').setup({})
+        end,
+      },
+      {
         "williamboman/mason.nvim",
         cmd = {
           "Mason",
@@ -32,8 +40,6 @@ local specs = {
         dependencies = "williamboman/mason-lspconfig.nvim",
         config = function()
           local mason = require("mason")
-          local mason_lspconfig = require("mason-lspconfig")
-          local lspconfig = require("lspconfig")
 
           require("lspconfig.ui.windows").default_options.border = "rounded"
 
@@ -49,23 +55,6 @@ local specs = {
               },
             },
           })
-
-          mason_lspconfig.setup_handlers({
-            function(server_name)
-              if server_name ~= "jdtls" then
-                local opts = {}
-
-                local require_ok, server = pcall(require, "plugins.lsp.settings." .. server_name)
-                if require_ok then
-                  opts = vim.tbl_deep_extend("force", server, opts)
-                end
-
-                lspconfig[server_name].setup(opts)
-              else
-                lspconfig.jdtls.setup({})
-              end
-            end,
-          })
         end,
       },
     },
@@ -79,64 +68,14 @@ local specs = {
       local configs = require("nvim-treesitter.configs")
 
       configs.setup({
-        ensure_installed = { "c", "lua", "vim", "vimdoc", "elixir", "javascript", "html", "go", "java" },
+        ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "elixir", "javascript", "html", "go", "java",
+          "python", "rust", "tsx", "typescript", "css", "json", "bash", "yaml", "markdown", "markdown_inline" },
         sync_install = false,
         auto_install = true,
         highlight = { enable = true, additional_vim_regex_highlighting = true, },
         indent = { enable = true },
       })
     end
-  },
-  {
-    "numToStr/Comment.nvim",
-    event = "VeryLazy",
-    -- enabled = false,
-    config = function()
-      require("Comment").setup({
-        ---Add a space b/w comment and the line
-        padding = true,
-        ---Whether the cursor should stay at its position
-        sticky = true,
-        ---Lines to be ignored while (un)comment
-        ignore = nil,
-        ---LHS of toggle mappings in NORMAL mode
-        toggler = {
-          ---Line-comment toggle keymap
-          line = '<leader>/',
-          ---Block-comment toggle keymap
-          block = 'gbc',
-        },
-        ---LHS of operator-pending mappings in NORMAL and VISUAL mode
-        opleader = {
-          ---Line-comment keymap
-          line = '<leader>/',
-          ---Block-comment keymap
-          block = '<leader>tb',
-        },
-        ---LHS of extra mappings
-        extra = {
-          ---Add comment on the line above
-          above = 'gcO',
-          ---Add comment on the line below
-          below = 'gco',
-          ---Add comment at the end of line
-          eol = 'gcA',
-        },
-        ---Enable keybindings
-        ---NOTE: If given `false` then the plugin won't create any mappings
-        mappings = {
-          ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-          basic = true,
-          ---Extra mapping; `gco`, `gcO`, `gcA`
-          extra = true,
-        },
-        ---Function to call before (un)comment
-        pre_hook = nil,
-        ---Function to call after (un)comment
-        post_hook = nil, --
-      })
-    end
-
   },
   {
     "hrsh7th/nvim-cmp",
@@ -246,8 +185,6 @@ local specs = {
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expandable() then
-              luasnip.expand()
             elseif luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
             else
@@ -414,12 +351,12 @@ local specs = {
 
   },
 
-  { "mbbill/undotree",             event = "VeryLazy" },
+  { "mbbill/undotree", event = "VeryLazy" },
 
   { "nvim-tree/nvim-web-devicons", lazy = true },
   -- This is only git plugin a user can need.
   -- Although I provided more after.
-  { "tpope/vim-fugitive",          event = "VeryLazy" },
+  { "tpope/vim-fugitive", event = "VeryLazy" },
   {
     "sindrets/diffview.nvim",
     event = "VeryLazy",
@@ -645,7 +582,6 @@ local specs = {
     event = "VeryLazy",
     dependencies = {
       "nvimtools/none-ls-extras.nvim",
-      "gbprod/none-ls-shellcheck.nvim",
     },
     config = function()
       local null_ls = require("null-ls")
@@ -655,17 +591,12 @@ local specs = {
           -- null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.black,
-          require("none-ls-shellcheck.diagnostics"),
-          require("none-ls-shellcheck.code_actions"),
           require("none-ls.diagnostics.eslint_d").with({
             condition = function(utls)
               return utls.root_has_file({
-                ".eslintrc.js",
-                ".eslintrc.mjs",
-                ".eslintrc.cjs",
-                ".eslintrc.yaml",
-                ".eslintrc.yml",
-                ".eslintrc.json",
+                "eslint.config.js",
+                "eslint.config.cjs",
+                "eslint.config.mjs",
               })
             end,
           }),
@@ -675,59 +606,11 @@ local specs = {
       vim.keymap.set({ "n", "v" }, "<space>fr", vim.lsp.buf.format, { desc = "format document" })
     end,
   },
+  -- NvimTree: file-explorer tree view at left sidebar
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
-      {
-        's1n7ax/nvim-window-picker',
-        version = '2.*',
-        config = function()
-          require 'window-picker'.setup({
-            filter_rules = {
-              include_current_win = false,
-              autoselect_one = true,
-              -- filter using buffer options
-              bo = {
-                -- if the file type is one of following, the window will be ignored
-                filetype = { 'neo-tree', "neo-tree-popup", "notify" },
-                -- if the buffer type is one of following, the window will be ignored
-                buftype = { 'terminal', "quickfix" },
-              },
-            },
-          })
-        end,
-      },
-    },
-    config = function()
-      -- If you want icons for diagnostic errors, you'll need to define them somewhere:
-      vim.fn.sign_define("DiagnosticSignError",
-        { text = " ", texthl = "DiagnosticSignError" })
-      vim.fn.sign_define("DiagnosticSignWarn",
-        { text = " ", texthl = "DiagnosticSignWarn" })
-      vim.fn.sign_define("DiagnosticSignInfo",
-        { text = " ", texthl = "DiagnosticSignInfo" })
-      vim.fn.sign_define("DiagnosticSignHint",
-        { text = "󰌵", texthl = "DiagnosticSignHint" })
-
-      vim.keymap.set('n', "<space>e", '<cmd>Neotree toggle<cr>', { desc = "file explorer tree toggle" })
-    end
+    "nvim-tree/nvim-tree.lua",
+    name = 'nvim-tree',
   },
-  -- AI code completion with Codeium
-  --[[ {
-    "Exafunction/codeium.vim",
-    event='BufEnter',
-    config = function ()
-      -- Changed '<C-g>' here to '<C-y>' to make it work.
-      vim.keymap.set('i', '<C-y>', function() return vim.fn['codeium#Accept']() end, { expr = true })
-      vim.keymap.set('i', '<c-;>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true })
-      vim.keymap.set('i', '<c-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true })
-      vim.keymap.set('i', '<c-x>', function() return vim.fn['codeium#Clear']() end, { expr = true })
-    end
-  }, ]]
   -- ui for messages, commandline & the popupmenu
   {
     "folke/noice.nvim",

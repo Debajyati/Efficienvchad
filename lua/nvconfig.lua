@@ -34,18 +34,20 @@ local options = {
     statusline = {
       enabled = false,
       theme = "default", -- default/vscode/vscode_colored/minimal
-      --[[ separator_style = "default",
+      -- default/round/block/arrow separators work only for default statusline theme
+      -- round and block will work for minimal theme only
+      separator_style = "default",
       order = nil,
-      modules = nil, ]]
+      modules = nil,
     },
 
     -- lazyload it when there are 1+ buffers
     tabufline = {
       enabled = false,
       lazyload = true,
-      --[[ order = { "treeOffset", "buffers", "tabs", "btns" },
+      order = { "treeOffset", "buffers", "tabs", "btns" },
       modules = nil,
-      bufwidth = 21, ]]
+      bufwidth = 21,
     },
   },
 

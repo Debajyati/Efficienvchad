@@ -1,8 +1,9 @@
 local M = {}
 
 M.base46 = {
-  theme = "chadracula-evondev",
-  transparency = false,
+  theme = "material-deep-ocean",
+  transparency = true,
+  theme_toggle = { "palenight", "chadracula_evondev" },
 }
 
 return M

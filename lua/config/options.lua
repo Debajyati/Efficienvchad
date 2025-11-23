@@ -3,11 +3,6 @@
 
 vim.opt.background = "dark"
 
--- If you are using a transparent terminal and want Neovim to be transparent also,
--- then Uncomment the 2 lines below.
--- vim.api.nvim_set_hl(0, "Normal", { bg="none"})
--- vim.api.nvim_set_hl(0, "NormalFloat", { bg="none" })
-
 vim.opt.number = true
 vim.opt.relativenumber = true
 
@@ -37,12 +32,20 @@ vim.opt.updatetime = 50
 vim.cmd("filetype plugin indent on")
 vim.opt.spelllang = 'en_us'
 
--- Uncomment the below lines to copy text always with clipboard only.
--- in the 2nd line below xclip is used as default. If you use any other
+-- For people using clipboard managers like xclip, wl-clipboard, etc. in WSL
+-- to sync clipboard between Windows and WSL Neovim.
+-- Uncomment the 2nd line below where xclip is used as default. If you use any other
 -- clipboard manager, then you have change the lines accordingly.
--- With these lines you can efficiently copy texts selected in 
+-- With these lines you can efficiently copy texts selected in
 -- VISUAL mode to clipboard with Ctrl+C & you won't need registers.
 
 vim.opt.clipboard:append("unnamedplus")
 -- vim.api.nvim_set_keymap("v", "<C-c>", ":w !xclip -i -sel c<CR><CR>", { noremap = true })
 
+-- Builtin Diagnostic configuration
+vim.diagnostic.config({
+  virtual_text = {
+    current_line = true,
+  },
+  severity_sort = true,
+})

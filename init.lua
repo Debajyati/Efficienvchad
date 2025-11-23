@@ -16,6 +16,10 @@ require("config.autocmds")
 require("config.noicesettings")
 require("config.notify-settings")
 require("config.telescope")
+require("config.nvim-tree")
+
+-- setting colorscheme as default
+vim.cmd [[colorscheme darkplus]]
 
 for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
   dofile(vim.g.base46_cache .. v)
@@ -29,3 +33,37 @@ end
 
 -- To disable automatic triggering of codeium anytime run the command below
 -- let g:codeium_manual = v:true
+
+vim.g.markdown_fenced_languages = {
+  "ts=typescript"
+}
+
+-- Enable spell checking for markdown files
+-- vim.cmd [[
+--  autocmd FileType markdown setlocal spell
+--  ]]
+--  Enable spell checking for text files
+--  vim.cmd [[
+--  autocmd FileType text setlocal spell
+--  ]]
+--  Enable spell checking for git commit messages
+--  vim.cmd [[
+--  autocmd FileType gitcommit setlocal spell
+--  ]]
+--  Enable spell checking for LaTeX files
+--  vim.cmd [[
+--  autocmd FileType tex setlocal spell
+--  ]]
+-- Set transparency level (0-100)
+-- vim.cmd [[
+-- let g:transparency = 20
+--  ]]
+--  Apply transparency to Neovim
+-- vim.cmd [[
+--  autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+--  autocmd VimEnter * hi NormalNC guibg=NONE ctermbg=NONE
+--  autocmd VimEnter * hi VertSplit guibg=NONE ctermbg=NONE
+--  autocmd VimEnter * hi StatusLine guibg=NONE ctermbg=NONE
+--  autocmd VimEnter * hi LineNr guibg=NONE ctermbg=NONE
+--  autocmd VimEnter * hi NonText guibg=NONE ctermbg=NONE
+--  ]]
