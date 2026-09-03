@@ -28,14 +28,6 @@ for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
 end
 
 vim.g.skip_builtin_treesitter_highlight = 1
--- Uncomment the next line to set the autocompletion of Codeium AI as default
--- vim.g.codeium_manual = true
-
--- To enable automatic triggering of codeium anytime run the command below
--- let g:codeium_manual = v:false
-
--- To disable automatic triggering of codeium anytime run the command below
--- let g:codeium_manual = v:true
 
 vim.g.markdown_fenced_languages = {
   "ts=typescript"
