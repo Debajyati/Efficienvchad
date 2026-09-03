@@ -27,7 +27,12 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+
 vim.opt.signcolumn = "yes"
+vim.opt.conceallevel = 0
+vim.g.loaded_treesitter_conceal = 0
 vim.opt.updatetime = 50
 vim.cmd("filetype plugin indent on")
 vim.opt.spelllang = 'en_us'
@@ -49,3 +54,6 @@ vim.diagnostic.config({
   },
   severity_sort = true,
 })
+
+vim.opt.winborder= "rounded"
+vim.opt.pumborder= "rounded"

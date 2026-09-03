@@ -3,11 +3,12 @@
 local specs = {
   {
     'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    opts = {
-      set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-    },
+    version = '*',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      -- optional but recommended
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    }
   },
 
   {
@@ -18,9 +19,19 @@ local specs = {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPost", "BufNewFile" },
-    cmd = { "LspInfo", "LspInstall", "LspUninstall" },
+    cmd = { "LspInstall", "LspUninstall" },
     dependencies = {
-      { "folke/neodev.nvim", opts = {} },
+      {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+          library = {
+            -- See the configuration section for more details
+            -- Load luvit types when the `vim.uv` word is found
+            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+          },
+        },
+      },
       {
         "nvimdev/lspsaga.nvim",
         event = "VeryLazy",
@@ -39,15 +50,15 @@ local specs = {
         }, -- Package Manager
         dependencies = "williamboman/mason-lspconfig.nvim",
         config = function()
-          local mason = require("mason")
+          local mason = require "mason"
 
           require("lspconfig.ui.windows").default_options.border = "rounded"
 
           mason.setup({
             ui = {
               -- Whether to automatically check for new versions when opening the :Mason window.
-              check_outdated_packages_on_open = false,
-              border = "single",
+              check_outdated_packages_on_open = true,
+              border = "rounded",
               icons = {
                 package_installed = "",
                 package_pending = "",
@@ -55,30 +66,24 @@ local specs = {
               },
             },
           })
-        end,
+        end
       },
     },
   },
-
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     lazy = false,
-    config = function()
-      local configs = require("nvim-treesitter.configs")
-
-      configs.setup({
-        ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "elixir", "javascript", "html", "go", "java",
-          "python", "rust", "tsx", "typescript", "css", "json", "bash", "yaml", "markdown", "markdown_inline" },
-        sync_install = false,
-        auto_install = true,
-        highlight = { enable = true, additional_vim_regex_highlighting = true, },
-        indent = { enable = true },
-      })
-    end
   },
   {
     "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = "lazydev",
+        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+      })
+    end,
     event = {
       "InsertEnter",
       "CmdlineEnter"
@@ -100,7 +105,7 @@ local specs = {
       local cmp = require("cmp")
       local luasnip = require("luasnip")
 
-      require("luasnip.loaders.from_snipmate").lazy_load { paths = vim.fn.stdpath "config" .. "/snippets/snipmate" }
+      require("luasnip.loaders.from_snipmate").lazy_load { paths = { vim.fn.stdpath "config" .. "/snippets/snipmate" } }
       require("luasnip.loaders.from_vscode").lazy_load()
       -- require("luasnip.loaders.from_vscode").lazy_load { paths = vim.fn.stdpath "config" .. "/snippets/vscode" }
 
@@ -192,7 +197,6 @@ local specs = {
             end
           end, {
             "i",
-            "s",
           }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -204,15 +208,16 @@ local specs = {
             end
           end, {
             "i",
-            "s",
           }),
         },
         window = {
           completion = cmp.config.window.bordered({
+            border = "rounded",
             winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
           }),
           documentation = cmp.config.window.bordered({
             border = "double",
+            -- focusable = false,
           }),
         },
         sources = {
@@ -224,9 +229,9 @@ local specs = {
             name = "look",
             keyword_length = 2,
             option = {
-                convert_case = true,
-                loud = true
-                --dict = '/usr/share/dict/words'
+              convert_case = true,
+              loud = true
+              --dict = '/usr/share/dict/words'
             }
           },
           { name = "path" },
@@ -257,7 +262,7 @@ local specs = {
               path = "CmpItemMenuPath",
             })[entry.source.name] -- default is CmpItemMenu
             -- detail information (optional)
-            local cmp_item = entry:get_completion_item()
+            local cmp_item = entry.completion_item
 
             if entry.source.name == "nvim_lsp" then
               -- Display which LSP servers this item came from.
@@ -304,6 +309,12 @@ local specs = {
 
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline(),
+        window = {
+          completion = cmp.config.window.bordered({
+            border = "single",
+            winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
+          }),
+        },
         sources = {
           { name = "cmdline" },
         },
@@ -351,12 +362,12 @@ local specs = {
 
   },
 
-  { "mbbill/undotree", event = "VeryLazy" },
+  { "mbbill/undotree",             event = "VeryLazy" },
 
   { "nvim-tree/nvim-web-devicons", lazy = true },
   -- This is only git plugin a user can need.
   -- Although I provided more after.
-  { "tpope/vim-fugitive", event = "VeryLazy" },
+  { "tpope/vim-fugitive",          event = "VeryLazy" },
   {
     "sindrets/diffview.nvim",
     event = "VeryLazy",
@@ -370,7 +381,7 @@ local specs = {
     dependencies = 'nvim-tree/nvim-web-devicons',
     event = "BufWinEnter",
     config = function()
-      local status_ok, bufferline = pcall(require, "bufferline")
+      local status_ok, _ = pcall(require, "bufferline")
       if not status_ok then return end
       require("bufferline").setup({
         options = {
@@ -591,6 +602,7 @@ local specs = {
           -- null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.formatting.black,
+          -- require("none-ls.diagnostics.cpplint"),
           require("none-ls.diagnostics.eslint_d").with({
             condition = function(utls)
               return utls.root_has_file({
@@ -677,14 +689,6 @@ local specs = {
       table.insert(opts.bottom, "Trouble")
     end,
   },
-  {
-    "ficcdaf/academic.nvim",
-    -- optional: only load for certain filetypes
-    ft = {"markdown", "tex"},
-    config = function ()
-      require("academic").load()
-    end
-  }
 }
 
 return specs

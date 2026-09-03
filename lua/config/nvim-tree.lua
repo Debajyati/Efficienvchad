@@ -153,4 +153,3 @@ nvim_tree.setup({
 
 keymap.set('n', '<Space>e', '<Cmd>NvimTreeToggle<CR>', { silent = true })
 keymap.set('n', '<Space>E', '<Cmd>NvimTreeFindFile<CR>', { silent = true })
-

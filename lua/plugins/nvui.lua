@@ -2,10 +2,10 @@ local specs = {
   {
     "nvchad/ui",
     config = function()
-      require("nvchad")
+      require "nvchad"
     end
   },
-  { "nvchad/volt" },
+  { "nvzone/volt" },
   {
     "nvchad/base46",
     lazy = true,

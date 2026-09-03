@@ -6,16 +6,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(event)
     local opts = { buffer = event.buf }
 
-    vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<cr>', opts)
+    -- Pressing 'K' once opens the window; pressing it again jumps into the window
+    vim.keymap.set('n', 'K', function()
+        vim.lsp.buf.hover({ border = "rounded", max_width = 80, max_height = 20 })
+      end,
+      { desc = 'LSP hover documentation' })
     vim.keymap.set('n', 'gd', '<cmd>Lspsaga goto_definition<cr>', opts)
     vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
     vim.keymap.set('n', 'gp', '<cmd>Lspsaga peek_definition<CR>', opts)
     vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
     vim.keymap.set('n', 'go', '<cmd>Lspsaga goto_type_definition<cr>', opts)
     vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-    vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+    vim.keymap.set('n', 'gs',
+      function()
+        vim.lsp.buf.signature_help({ border = "double", max_width = 80, max_height = 20 })
+      end,
+      { desc = 'LSP signature help' })
     vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-    vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+    vim.keymap.set({ 'n', 'x' }, '<F3>', function()
+      vim.lsp.buf.format({ async = true })
+    end, opts)
     vim.keymap.set('n', '<F4>', '<cmd>Lspsaga code_action<cr>', opts)
 
     vim.keymap.set('n', 'gl', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
@@ -45,11 +55,14 @@ cmp.setup({
       col_offset = -3,
       side_padding = 0,
     },
+    documentation = {
+      border = "rounded",
+      winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+    },
   },
   sources = {
     { name = 'luasnip' },
     { name = 'nvim_lsp' },
-    { name = "supermaven" },
     { name = 'buffer' },
   },
   mapping = cmp.mapping.preset.insert({
@@ -97,4 +110,42 @@ vim.lsp.config['tsserver'] = {
 
 vim.lsp.config['djlsp'] = {
   root_markers = { 'manage.py' },
+}
+
+vim.lsp.config['rust_analyzer'] = {
+  settings = {
+    ['rust-analyzer'] = {
+      cargo = { allFeatures = true },
+      check = { command = 'clippy' },
+      lens = {
+        debug = {
+          enable = true
+        },
+        enable = true,
+        implementations = {
+          enable = true
+        },
+        references = {
+          adt = {
+            enable = true
+          },
+          enumVariant = {
+            enable = true
+          },
+          method = {
+            enable = true
+          },
+          trait = {
+            enable = true
+          }
+        },
+        run = {
+          enable = true
+        },
+        updateTest = {
+          enable = true
+        }
+      }
+    },
+  },
 }

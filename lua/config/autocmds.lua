@@ -1,5 +1,18 @@
 -- Add any additional autocmds here
 
+
+-- Show neotree on startup
+-- vim.api.nvim_create_augroup("neotree", {})
+-- vim.api.nvim_create_autocmd("UiEnter", {
+  -- desc = "Open Neotree automatically",
+  -- group = "neotree",
+  -- callback = function()
+    -- if vim.fn.argc() == 0 then
+      -- vim.cmd [[Neotree toggle]]
+    -- end
+  -- end,
+-- })
+
 -- Highlight on yank
 vim.api.nvim_create_augroup("highlight_yank", {})
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -41,3 +54,43 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     -- vim.cmd("tabdo wincmd =")
   -- end,
 -- })
+
+local pre_installed_parsers = {
+    "c",
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "query",
+    "vim",
+    "vimdoc",
+}
+
+vim.api.nvim_create_augroup("TSAutoInstallSetup", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    group = "TSAutoInstallSetup",
+    callback = function(args)
+        -- markdown gets treesitter highlighting disabled entirely
+        if args.match == "markdown" then
+            vim.treesitter.stop(args.buf)
+            return
+        end
+
+        local treesitter = require("nvim-treesitter")
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if lang and vim.list_contains(treesitter.get_available(), lang) then
+            if not vim.list_contains(treesitter.get_installed(), lang)
+                and not vim.list_contains(pre_installed_parsers, lang) then
+                vim.notify("Installing treesitter parser...", vim.log.levels.WARN)
+                treesitter.install(lang):wait()
+            end
+            vim.treesitter.start(args.buf)
+            -- folds, provided by Neovim
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            vim.wo.foldmethod = 'expr'
+            -- Activate modern Tree-sitter indentation expressions
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+    end,
+    desc = "Enable nvim-treesitter (install parser if missing), except for markdown",
+})

@@ -1,4 +1,4 @@
-local chadrc = require("chadrc")
+local chadrc = require "chadrc"
 local colorscheme = "palenight"
 if rawget(chadrc.base46, 'theme') then
   colorscheme = chadrc.base46.theme
@@ -22,9 +22,11 @@ local options = {
     cmp = {
       icons_left = true, -- only for non-atom styles!
       style = "atom_colored", -- default/flat_light/flat_dark/atom/atom_colored
+      border = "rounded", -- single/double/rounded/solid/shadow
       abbr_maxwidth = 60,
       format_colors = {
         tailwind = false, -- will work for css lsp too
+        lsp = true,
         icon = "󱓻",
       },
     },
@@ -82,6 +84,12 @@ local options = {
     mode = "virtual", -- fg, bg, virtual
     virt_text = "󱓻 ",
     highlight = { hex = true, lspvars = true },
+  },
+
+  themepicker = {
+     style = "bordered", -- bordered, flat, compact
+     border = true,
+     icon = nil, -- set it to nil to use default icons preferred by the style
   },
 }
 

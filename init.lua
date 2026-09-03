@@ -10,13 +10,15 @@ vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46_cache/"
 -- bootstrap lazy.nvim, and your plugins
 require("config.options")
 require("config.lazy")
-require("config.keymaps")
 require("config.lspsettings")
 require("config.autocmds")
 require("config.noicesettings")
 require("config.notify-settings")
 require("config.telescope")
 require("config.nvim-tree")
+require("config.treesitter")
+require("config.commands")
+require("config.keymaps")
 
 -- setting colorscheme as default
 vim.cmd [[colorscheme darkplus]]
@@ -25,6 +27,7 @@ for _, v in ipairs(vim.fn.readdir(vim.g.base46_cache)) do
   dofile(vim.g.base46_cache .. v)
 end
 
+vim.g.skip_builtin_treesitter_highlight = 1
 -- Uncomment the next line to set the autocompletion of Codeium AI as default
 -- vim.g.codeium_manual = true
 
@@ -59,11 +62,11 @@ vim.g.markdown_fenced_languages = {
 -- let g:transparency = 20
 --  ]]
 --  Apply transparency to Neovim
--- vim.cmd [[
---  autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
---  autocmd VimEnter * hi NormalNC guibg=NONE ctermbg=NONE
---  autocmd VimEnter * hi VertSplit guibg=NONE ctermbg=NONE
---  autocmd VimEnter * hi StatusLine guibg=NONE ctermbg=NONE
---  autocmd VimEnter * hi LineNr guibg=NONE ctermbg=NONE
---  autocmd VimEnter * hi NonText guibg=NONE ctermbg=NONE
---  ]]
+vim.cmd [[
+ autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+ autocmd VimEnter * hi NormalNC guibg=NONE ctermbg=NONE
+ autocmd VimEnter * hi VertSplit guibg=NONE ctermbg=NONE
+ autocmd VimEnter * hi StatusLine guibg=NONE ctermbg=NONE
+ autocmd VimEnter * hi LineNr guibg=NONE ctermbg=NONE
+ autocmd VimEnter * hi NonText guibg=NONE ctermbg=NONE
+ ]]
